@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hygieia-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hygieia-ui
+  template:
+    metadata:
+      labels:
+        app: hygieia-ui
+    spec:
+      containers:
+      - name: hygieia-ui
+        image: bhanudocker.azurecr.io/hygieia-ui
+        ports:
+        - containerPort: 3000
+      imagePullSecrets:
+      - name: secret-bhanu
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hygieia-ui
+spec:
+  type: LoadBalancer
+  ports:
+  - name: hygieia-ui
+    protocol: TCP
+    port: 3000
+    targetPort: 3000
+
+  selector:
+    app: hygieia-ui

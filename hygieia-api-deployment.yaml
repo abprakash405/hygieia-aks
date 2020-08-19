@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hygieia-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hygieia-api
+  template:
+    metadata:
+      labels:
+        app: hygieia-api
+    spec:
+      containers:
+      - name: hygieia-api
+        image: bhanudocker.azurecr.io/hygieia-api
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATA_MONGODB_HOST
+          value: "52.186.137.49"
+      imagePullSecrets:
+      - name: secret-bhanu
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hygieia-api
+spec:
+  type: LoadBalancer
+  ports:
+  - name: hygieia-api
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+
+  selector:
+    app: hygieia-api
